@@ -2,7 +2,6 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema({
   fullname: {
     type: String,
-    required: true,
     minlength: 3,
     trim: true,
   },
@@ -11,13 +10,15 @@ const userSchema = new mongoose.Schema({
   isAdmin: Boolean,
   contact: Number,
   orders: {
-    items: Array,
+    item: Array,
     default: [],
   },
-  cart: {
-    items: Array,
-    default: [],
-  },
+  cart: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "product", // Corrected `ref` usag
+    },
+  ],
   picture: String,
 });
 
