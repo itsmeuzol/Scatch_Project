@@ -1,45 +1,54 @@
 <%- include('./partials/header') %>
-    <% if(error.length>0){ %>
-        <div class="absolute top-5 left-1/2 -translate-x-1/2 -translate-y-1/2 p-3 rounded-md bg-red-500">
-            <span class="inline-block mt-1 mb-1 text-white">
-                <%= error %>
-            </span>
+
+<div class="min-h-screen bg-gray-100">
+    <!-- Hero Section -->
+    <div class="bg-blue-600 text-white py-20">
+        <div class="container mx-auto px-6 text-center">
+            <h1 class="text-5xl font-bold mb-4">Welcome to SwosthaSamaj</h1>
+            <p class="text-xl mb-8">Your one-stop solution for all medical needs. Quality products, affordable prices, and fast delivery.</p>
+            <a href="/products" class="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition duration-300">Shop Now</a>
+            <a href="/products" class="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition duration-300">Make Appointments</a>
         </div>
-        <% } %>
-            <div class="w-full h-screen flex px-20">
-                <div class="w-1/2 flex items-center justify-center h-screen">
-                    <div class="w-full px-32">
-                        <h3 class="text-4xl">welcome to <span class="text-blue-400 font-semibold">Scatch</span></h3>
-                        <h4 class="text-2xl mb-5">create your account</h4>
-                        <form autocomplete="off" action="/users/register" method="post">
-                            <input
-                                class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="text" placeholder="Full Name" name="fullname">
-                            <input
-                                class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="email" placeholder="Email" name="email">
-                            <input
-                                class="bg-zinc-100 block w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="password" placeholder="Password" name="password">
-                            <input class="px-5 rounded-full py-3 mt-2 bg-blue-500 text-white" type="submit"
-                                value="Create My Account">
-                        </form>
-                    </div>
-                </div>
-                <div class="w-1/2 flex items-center justify-center h-screen">
-                    <div class="w-full px-32">
-                        <h4 class="text-2xl capitalize mb-5">login your account</h4>
-                        <form autocomplete="off" action="/users/login" method="post">
-                            <input
-                                class="block bg-zinc-100 w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="email" placeholder="Email" name="email">
-                            <input
-                                class="block bg-zinc-100 w-full px-3 py-2 border-[1px] rounded-md mb-3 border-zinc-200"
-                                type="password" placeholder="Password" name="password">
-                            <input class="px-5 block rounded-full py-3 mt-2 bg-blue-500 text-white" type="submit"
-                                value="Login">
-                        </form>
-                    </div>
-                </div>
+    </div>
+
+    <!-- Featured Products Section -->
+    <div class="container mx-auto px-6 py-16">
+        <h2 class="text-3xl font-bold text-center mb-12">Featured Products</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Product Card 1 -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <img src="https://via.placeholder.com/300" alt="Product 1" class="w-full h-48 object-cover mb-4 rounded-lg">
+                <h3 class="text-xl font-semibold mb-2">Vitamin C Supplements</h3>
+                <p class="text-gray-600 mb-4">Boost your immunity with our high-quality Vitamin C supplements.</p>
+                <a href="#" class="text-blue-600 font-semibold hover:text-blue-800">Learn More</a>
             </div>
-            <%- include('./partials/footer') %>
+
+            <!-- Product Card 2 -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <img src="https://via.placeholder.com/300" alt="Product 2" class="w-full h-48 object-cover mb-4 rounded-lg">
+                <h3 class="text-xl font-semibold mb-2">Blood Pressure Monitor</h3>
+                <p class="text-gray-600 mb-4">Keep track of your health with our accurate and easy-to-use blood pressure monitor.</p>
+                <a href="#" class="text-blue-600 font-semibold hover:text-blue-800">Learn More</a>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <img src="https://via.placeholder.com/300" alt="Product 3" class="w-full h-48 object-cover mb-4 rounded-lg">
+                <h3 class="text-xl font-semibold mb-2">Hand Sanitizer</h3>
+                <p class="text-gray-600 mb-4">Stay protected with our alcohol-based hand sanitizer, perfect for on-the-go use.</p>
+                <a href="#" class="text-blue-600 font-semibold hover:text-blue-800">Learn More</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action Section -->
+    <div class="bg-blue-50 py-16">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-3xl font-bold mb-4">Need Help Choosing the Right Product?</h2>
+            <p class="text-gray-600 mb-8">Our team of experts is here to help you find the best products for your needs.</p>
+            <a href="/contact" class="bg-blue-600 text-white px-8 py-3 rounded-full font-semibold hover:bg-blue-700 transition duration-300">Contact Us</a>
+        </div>
+    </div>
+</div>
+
+<%- include('./partials/footer') %>

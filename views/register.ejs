@@ -1,0 +1,75 @@
+<%- include('./partials/header') %>
+
+<% if (error.length > 0) { %>
+    <div id="flash-message" class="absolute top-5 left-1/2 -translate-x-1/2 p-3 rounded-md bg-red-500 text-white">
+      <%= error %>
+    </div>
+<% } %>
+
+<% if (success.length > 0) { %>
+    <div id="flash-message" class="absolute top-5 left-1/2 -translate-x-1/2 p-3 rounded-md bg-green-500 text-white">
+      <%= success %>
+    </div>
+<% } %>
+
+
+<div class="w-full h-screen flex items-center justify-center px-10 md:px-20">
+    <!-- Register Section -->
+    <div class="w-full md:w-1/2 flex items-center justify-center h-auto md:h-screen">
+        <div class="w-full max-w-md px-8 py-6 bg-white shadow-lg rounded-lg">
+    <h3 class="text-4xl text-center md:text-left font-semibold text-teal-600 mb-4">
+        Welcome to, <span class="text-blue-400">Swostha Samaj</span>
+    </h3>  
+    <h4 class="text-2xl mb-5 text-center md:text-left font-bold text-gray-700">
+        Create your account
+    </h4>
+    <form autocomplete="off" action="/users/register" method="post" class="space-y-4">
+        <!-- Full Name -->
+        <div class="relative">
+            <input 
+                class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+                type="text" 
+                placeholder="Full Name" 
+                name="fullname" 
+                required
+            >
+        </div>
+
+        <!-- Email -->
+        <div class="relative">
+            <input 
+                class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+                type="email" 
+                placeholder="Email" 
+                name="email" 
+                pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                required
+            >
+        </div>
+
+        <!-- Password -->
+        <div class="relative">
+            <input 
+                class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+                type="password" 
+                placeholder="Password" 
+                name="password" 
+                required
+            >
+        </div>
+
+        <!-- Submit Button -->
+        <div>
+            <input 
+                class="w-full px-5 py-3 mt-4 bg-blue-500 text-white rounded-full cursor-pointer transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                type="submit" 
+                value="Create My Account"
+            >
+        </div>
+    </form>
+</div>
+
+    </div>
+</div>
+
+<%- include('./partials/footer') %>

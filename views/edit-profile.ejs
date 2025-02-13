@@ -1,0 +1,74 @@
+<%- include('./partials/header') %>
+
+<!-- Main Content for Edit Profile Page -->
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">Edit Profile</h1>
+
+  <!-- Edit Profile Form -->
+  <div class="bg-white shadow-md rounded-lg p-6">
+    <form action="/users/edit-profile" method="POST">
+      <!-- Full Name -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700">Full Name</label>
+        <input
+          type="text"
+          name="fullname"
+          value="<%= user.fullname %>"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          required
+        />
+      </div>
+
+      <!-- Email (Read-Only) -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700"
+          >Email Address</label
+        >
+        <input
+          type="email"
+          name="email"
+          value="<%= user.email %>"
+          class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed"
+          readonly
+        />
+      </div>
+
+      <!-- Phone Number -->
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700"
+          >Phone Number</label
+        >
+        <div class="flex items-center">
+          <span
+            class="px-3 py-2 bg-gray-200 border border-gray-300 rounded-l-lg"
+            >+977</span
+          >
+          <input
+            type="text"
+            name="phone"
+            id="phone"
+            value="<%= user.phone ? user.phone.replace('+977', '') : '' %>"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-r-lg focus:ring-blue-500 focus:border-blue-500"
+            maxlength="10"
+            pattern="\d{10}"
+            title="Phone number must be exactly 10 digits"
+            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="mt-6">
+        <button
+          type="submit"
+          class="inline-flex items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600"
+        >
+          Save Changes
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<%- include('./partials/footer') %>

@@ -1,0 +1,84 @@
+<%- include('./partials/header') %>
+
+<div class="min-h-screen bg-gray-100 py-12">
+    <div class="container mx-auto px-6">
+        <!-- Page Heading -->
+        <h1 class="text-4xl font-bold text-center mb-8">Our Blog</h1>
+        <p class="text-lg text-gray-600 text-center mb-12">Stay updated with the latest health tips, news, and insights from our experts.</p>
+
+        <!-- Blog Posts Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Blog Post 1 -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <img src="https://via.placeholder.com/400x200" alt="Blog Post 1" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">10 Tips for a Healthy Lifestyle</h2>
+                    <p class="text-gray-600 mb-4">Discover simple yet effective tips to maintain a healthy lifestyle and improve your overall well-being.</p>
+                    <a href="/blog/10-tips-for-a-healthy-lifestyle" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
+                </div>
+            </div>
+
+            <!-- Blog Post 2 -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <img src="https://via.placeholder.com/400x200" alt="Blog Post 2" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">The Importance of Regular Checkups</h2>
+                    <p class="text-gray-600 mb-4">Learn why regular health checkups are crucial for early detection and prevention of diseases.</p>
+                    <a href="/blog/importance-of-regular-checkups" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
+                </div>
+            </div>
+
+            <!-- Blog Post 3 -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <img src="https://via.placeholder.com/400x200" alt="Blog Post 3" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">Managing Stress in a Busy World</h2>
+                    <p class="text-gray-600 mb-4">Explore practical strategies to manage stress and maintain mental health in today's fast-paced world.</p>
+                    <a href="/blog/managing-stress" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
+                </div>
+            </div>
+
+            <!-- Blog Post 4 -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <img src="https://via.placeholder.com/400x200" alt="Blog Post 4" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">The Benefits of a Balanced Diet</h2>
+                    <p class="text-gray-600 mb-4">Understand how a balanced diet can improve your health and prevent chronic diseases.</p>
+                    <a href="/blog/benefits-of-a-balanced-diet" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
+                </div>
+            </div>
+
+            <!-- Blog Post 5 -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <img src="https://via.placeholder.com/400x200" alt="Blog Post 5" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">Exercise for a Healthy Heart</h2>
+                    <p class="text-gray-600 mb-4">Find out how regular exercise can keep your heart healthy and reduce the risk of cardiovascular diseases.</p>
+                    <a href="/blog/exercise-for-a-healthy-heart" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
+                </div>
+            </div>
+
+            <!-- Blog Post 6 -->
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                <img src="https://via.placeholder.com/400x200" alt="Blog Post 6" class="w-full h-48 object-cover">
+                <div class="p-6">
+                    <h2 class="text-2xl font-bold mb-4">Sleep and Its Impact on Health</h2>
+                    <p class="text-gray-600 mb-4">Learn about the importance of sleep and how it affects your physical and mental health.</p>
+                    <a href="/blog/sleep-and-health" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="flex justify-center mt-12">
+            <nav class="flex gap-2">
+                <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">1</a>
+                <a href="#" class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50">2</a>
+                <a href="#" class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50">3</a>
+                <a href="#" class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50">Next →</a>
+            </nav>
+        </div>
+    </div>
+</div>
+
+<%- include('./partials/footer') %>

@@ -1,0 +1,53 @@
+<%- include('./partials/header') %>
+
+<!-- Main Content for My Profile Page -->
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-3xl font-bold text-gray-800 mb-6">My Profile</h1>
+
+  <!-- Profile Information Section -->
+  <div class="bg-white shadow-md rounded-lg p-6">
+    <div class="flex items-center space-x-4">
+      <!-- Avatar -->
+      <div class="w-20 h-20 rounded-full bg-gray-300 flex items-center justify-center">
+        <span class="text-white text-2xl font-semibold"><%= user.fullname[0] %></span>
+      </div>
+
+      <!-- User Details -->
+      <div>
+        <h2 class="text-xl font-semibold text-gray-800"><%= user.fullname %></h2>
+        <p class="text-gray-600"><%= user.email %></p>
+      </div>
+    </div>
+
+    <!-- Additional Profile Information (Horizontal Layout) -->
+    <div class="mt-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Personal Information</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Full Name</label>
+          <p class="mt-1 text-gray-900"><%= user.fullname %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Email Address</label>
+          <p class="mt-1 text-gray-900"><%= user.email %></p>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Phone Number</label>
+          <p class="mt-1 text-gray-900"><%= user.phone || "Not provided" %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Edit Profile Button -->
+    <div class="mt-6">
+      <a
+        href="/users/edit-profile"
+        class="inline-flex items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600"
+      >
+        Edit Profile
+      </a>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer') %>

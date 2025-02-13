@@ -3,19 +3,31 @@ const userModel = require("../models/user-model");
 
 module.exports = async (req, res, next) => {
   const token = req.cookies.token;
-  if (!token) {
-    req.flash("error", "Please login first");
-    return res.redirect("/");
+
+  if (token) {
+    try {
+      let decoded = jwt.verify(token, process.env.JWT_KEY);
+      let user = await userModel
+        .findOne({ email: decoded.email })
+        .select("-password");
+
+      if (user) {
+        req.user = user; // Store user in req
+        res.locals.loggedin = true;
+        res.locals.fullname = user.fullname; // Make username available in views
+      } else {
+        res.locals.loggedin = false;
+        res.locals.username = "";
+      }
+    } catch (err) {
+      console.error("JWT Verification Error:", err);
+      res.locals.loggedin = false;
+      res.locals.username = "";
+    }
+  } else {
+    res.locals.loggedin = false;
+    res.locals.username = "";
   }
-  try {
-    let decoded = jwt.verify(token, process.env.JWT_KEY);
-    let user = await userModel
-      .findOne({ email: decoded.email })
-      .select("-password");
-    req.user = user;
-    next();
-  } catch (err) {
-    req.flash("error", "Something went wrong");
-    res.redirect("/");
-  }
+
+  next(); // Continue request processing
 };

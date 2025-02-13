@@ -6,7 +6,7 @@ const db = config.get("MONGODB_URI");
 mongoose
   .connect(db)
   .then(() => {
-    dbr("connected.");
+    console.log("connected.");
   })
   .catch((err) => {
     dbr(err);
