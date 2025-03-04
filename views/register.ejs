@@ -12,63 +12,110 @@
     </div>
 <% } %>
 
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8">
+        <div class="bg-white shadow-md rounded-lg p-8">
+            <h3 class="text-4xl text-center font-semibold text-teal-600 mb-4">
+                Welcome to, <span class="text-blue-400">Swostha Samaj</span>
+            </h3>  
+            <h4 class="text-2xl mb-5 text-center font-bold text-gray-700">
+                Create your account
+            </h4>
+            <form autocomplete="off" action="/users/register" method="post" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Full Name -->
+                    <div class="relative">
+                        <input 
+                            class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+                            type="text" 
+                            placeholder="Full Name" 
+                            name="fullname" 
+                            required
+                        >
+                    </div>
 
-<div class="w-full h-screen flex items-center justify-center px-10 md:px-20">
-    <!-- Register Section -->
-    <div class="w-full md:w-1/2 flex items-center justify-center h-auto md:h-screen">
-        <div class="w-full max-w-md px-8 py-6 bg-white shadow-lg rounded-lg">
-    <h3 class="text-4xl text-center md:text-left font-semibold text-teal-600 mb-4">
-        Welcome to, <span class="text-blue-400">Swostha Samaj</span>
-    </h3>  
-    <h4 class="text-2xl mb-5 text-center md:text-left font-bold text-gray-700">
-        Create your account
-    </h4>
-    <form autocomplete="off" action="/users/register" method="post" class="space-y-4">
-        <!-- Full Name -->
-        <div class="relative">
-            <input 
-                class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
-                type="text" 
-                placeholder="Full Name" 
-                name="fullname" 
-                required
-            >
+                    <!-- Email -->
+                    <div class="relative">
+                        <input 
+                            class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+                            type="email" 
+                            placeholder="Email" 
+                            name="email" 
+                            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+                            required
+                        >
+                    </div>
+
+                    <!-- Password -->
+                    <div class="relative">
+                        <input 
+                            class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+                            type="password" 
+                            placeholder="Password" 
+                            name="password" 
+                            required
+                        >
+                    </div>
+
+                    <!-- Address -->
+                    <div class="relative">
+                        <input 
+                            class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+                            type="text" 
+                            placeholder="Address" 
+                            name="address" 
+                            required
+                        >
+                    </div>
+
+                    <!-- Age -->
+                    <div class="relative">
+                        <input 
+                            class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+                            type="number" 
+                            placeholder="Age" 
+                            name="age" 
+                            required
+                        >
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="relative">
+                        <input 
+                            class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+                            type="tel" 
+                            placeholder="Phone" 
+                            name="phone" 
+                            pattern="[0-9]{10}"
+                            required
+                        >
+                    </div>
+
+                    <!-- Sex -->
+                    <div class="relative">
+                        <select 
+                            class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
+                            name="sex" 
+                            required
+                        >
+                            <option value="" disabled selected>Select Sex</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div>
+                    <input 
+                        class="w-full px-5 py-3 mt-4 bg-blue-500 text-white rounded-full cursor-pointer transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        type="submit" 
+                        value="Create My Account"
+                    >
+                </div>
+            </form>
         </div>
-
-        <!-- Email -->
-        <div class="relative">
-            <input 
-                class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
-                type="email" 
-                placeholder="Email" 
-                name="email" 
-                pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
-                required
-            >
-        </div>
-
-        <!-- Password -->
-        <div class="relative">
-            <input 
-                class="bg-zinc-100 w-full px-4 py-3 border border-zinc-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 transition duration-200"
-                type="password" 
-                placeholder="Password" 
-                name="password" 
-                required
-            >
-        </div>
-
-        <!-- Submit Button -->
-        <div>
-            <input 
-                class="w-full px-5 py-3 mt-4 bg-blue-500 text-white rounded-full cursor-pointer transition duration-200 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-teal-500"
-                type="submit" 
-                value="Create My Account"
-            >
-        </div>
-    </form>
-</div>
-
     </div>
 </div>
 

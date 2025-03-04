@@ -37,12 +37,14 @@ const ownersRouter = require("./routes/ownersRouter");
 const usersRouter = require("./routes/usersRouter");
 const ProductsRouter = require("./routes/productsRouter");
 const indexRouter = require("./routes/index");
+const doctorRouter = require("./routes/doctorRouter");
 
 app.use(flash());
 app.use("/", indexRouter);
 app.use("/owners", ownersRouter);
 app.use("/users", usersRouter);
 app.use("/products", ProductsRouter);
+app.use("/doctor", doctorRouter);
 
 app.use((req, res, next) => {
   res.locals.loggedin = req.session.loggedin || false;

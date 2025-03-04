@@ -5,26 +5,25 @@ const userSchema = new mongoose.Schema({
     minlength: 3,
     trim: true,
   },
-  email: String,
+  email: { type: String, unique: true, required: true },
   password: String,
-  isAdmin: Boolean,
-  phone: Number,
+  role: { type: String, enum: ["user", "staff", "admin"], default: "user" },
+  phone: String,
+  age: Number,
+  sex: String,
+  address: String,
   otp: String,
   otpExpiry: {
     type: Date, // Store the expiration time of the OTP
   },
   isVerified: { type: Boolean, default: false }, // User is unverified initially
-  orders: {
-    item: Array,
-    default: [],
-  },
   cart: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "product", // Corrected `ref` usag
+      ref: "product", // Corrected `ref` usage
     },
   ],
-  picture: String,
+  lastLogin: { type: Date },
 });
 
 module.exports = mongoose.model("user", userSchema);

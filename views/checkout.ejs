@@ -1,0 +1,92 @@
+<%- include('./partials/header') %>
+
+<!-- Main Content for Checkout Page -->
+<div
+  class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8"
+>
+  <div class="max-w-3xl w-full space-y-8">
+    <div class="bg-white/70 backdrop-blur-lg shadow-lg rounded-2xl p-10">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">
+        Proceed to Checkout
+      </h1>
+
+      <!-- Order Summary -->
+      <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Order Summary</h2>
+        <div class="space-y-4">
+          <% items.forEach(cartItem => { %>
+          <div class="flex justify-between items-center border-b pb-4">
+            <div>
+              <h3 class="text-lg font-semibold"><%= cartItem.name %></h3>
+              <p class="text-sm text-gray-600">
+                Quantity: <%= cartItem.quantity %>
+              </p>
+            </div>
+            <p class="text-lg font-semibold">
+              Rs. <%= cartItem.price * cartItem.quantity %>
+            </p>
+          </div>
+          <% }) %>
+        </div>
+
+        <!-- Discount and Total Amount -->
+        <div class="mt-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-semibold">Subtotal</h3>
+            <h3 class="font-bold text-xl">Rs. <%= subtotal %></h3>
+          </div>
+
+          <!-- Discount Input -->
+          <form action="/apply-discount" method="POST" class="mb-4">
+            <div class="flex items-center gap-4">
+              <input
+                type="text"
+                name="discountCode"
+                placeholder="Enter discount code"
+                class="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="submit"
+                class="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition"
+              >
+                Apply
+              </button>
+            </div>
+          </form>
+
+          <!-- Total Amount -->
+          <div class="flex justify-between items-center">
+            <h3 class="text-xl font-semibold">Total Amount</h3>
+            <h3 class="font-bold text-xl text-green-600">
+              Rs. <%= discountApplied ? totalPriceAfterDiscount : subtotal %>
+            </h3>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Section -->
+      <div class="bg-white shadow-md rounded-lg p-6 text-center">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">
+          Payment with Khalti
+        </h2>
+        <button
+          id="khalti-button"
+          class="w-full flex items-center justify-center gap-3 bg-purple-600 text-white font-semibold py-3 rounded-md shadow-md hover:bg-purple-700 transition"
+        >
+          <img
+            src="/images/payment/khalti_logo_zoho_white.png"
+            alt="Khalti Logo"
+            class="h-6"
+          />
+          Pay with Khalti
+        </button>
+      </div>
+
+      <!-- Khalti Payment Script -->
+      <script src="https://khalti.com/static/khalti-checkout.js"></script>
+      <script src="/scripts/khalti-payment.js"></script>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer') %>

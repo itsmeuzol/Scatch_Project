@@ -8,11 +8,17 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- styles.css -->
     <link rel="stylesheet" href="/styles/styles.css" />
-    <!-- Hamburger Menu Icon (Heroicons) -->
+    <!-- Font Awesome CDN -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      rel="stylesheet"
+    />
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/alpinejs/3.10.5/cdn.min.js"
       defer
     ></script>
+    <script src="/scripts/dropdown.js" defer></script>
+    
   </head>
 
   <body
@@ -59,39 +65,12 @@
         class="md:flex gap-6 text-lg text-white font-semibold hidden"
         :class="{ 'hidden': !open, 'block': open }"
       >
-        <a
-          href="/"
-          class="hover:text-yellow-600"
-          :class="{ 'text-yellow-700': isActive('/') }"
-          >Home</a
-        >
-        <a
-          href="/service"
-          class="hover:text-yellow-600"
-          :class="{ 'text-yellow-700': isActive('/service') }"
-          >Service</a
-        >
-        <a
-          href="/contact"
-          class="hover:text-yellow-600"
-          :class="{ 'text-yellow-700': isActive('/contact') }"
-          >Contact Us</a
-        >
-        <a
-          href="/help"
-          class="hover:text-yellow-600"
-          :class="{ 'text-yellow-700': isActive('/help') }"
-          >Help</a
-        >
-        <a
-          href="/blog"
-          class="hover:text-yellow-600"
-          :class="{ 'text-yellow-700': isActive('/blog') }"
-          >Blogs</a
-        >
+        <%- include('./navbar-links') %>
+        <%- include('./role-links') %>
       </div>
 
       <script>
+        
         function isActive(path) {
           return window.location.pathname === path;
         }
@@ -102,127 +81,7 @@
         class="md:flex gap-5 hidden"
         :class="{ 'hidden': !open, 'block': open }"
       >
-        <% var loggedin = typeof loggedin !== 'undefined' ? loggedin : false; %>
-        <% var fullname = typeof fullname !== 'undefined' ? fullname : ''; %> <%
-        if (!loggedin) { %>
-        <!-- Signup & Login -->
-        <a
-          href="/register"
-          class="bg-teal-700 text-white px-5 py-2 rounded-lg font-semibold shadow-md hover:bg-teal-800"
-          >Signup</a
-        >
-        <a
-          href="/login"
-          class="bg-teal-700 text-white px-5 py-2 rounded-lg font-semibold shadow-md hover:bg-teal-800"
-          >Log In</a
-        >
-        <% } else { %>
-        <!-- If logged in, show username and dropdown -->
-        <div class="flex items-center space-x-2 relative">
-          <!-- Avatar Icon -->
-          <div
-            class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center"
-          >
-            <span class="text-white font-semibold"><%= fullname[0] %></span>
-          </div>
-
-          <!-- Username and Dropdown Icon -->
-          <div class="relative">
-            <span
-              id="dropdown-toggle"
-              class="text-green font-semibold cursor-pointer flex items-center"
-            >
-              Hey! <%= fullname %>
-              <!-- Dropdown Icon -->
-              <svg
-                id="dropdown-icon"
-                class="w-4 h-4 ml-1 transition-transform"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                ></path>
-              </svg>
-            </span>
-
-            <!-- Dropdown Menu -->
-            <div
-              id="dropdown-menu"
-              class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg hidden"
-            >
-              <ul class="py-2">
-                <li>
-                  <a
-                    href="/users/profile"
-                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >My Profile</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="/users/appointments"
-                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >Appointments</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="/users/medical-records"
-                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >Medical Records</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="/users/change-password"
-                    class="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                    >Change Password</a
-                  >
-                </li>
-                <li>
-                  <a
-                    href="/users/logout"
-                    class="block px-4 py-2 text-red-500 font-semibold hover:bg-gray-100"
-                    >Logout</a
-                  >
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- JavaScript to Handle Dropdown Toggle -->
-        <script>
-          const dropdownToggle = document.getElementById("dropdown-toggle");
-          const dropdownMenu = document.getElementById("dropdown-menu");
-          const dropdownIcon = document.getElementById("dropdown-icon");
-
-          dropdownToggle.addEventListener("click", () => {
-            // Toggle dropdown visibility
-            dropdownMenu.classList.toggle("hidden");
-
-            // Rotate dropdown icon
-            dropdownIcon.classList.toggle("rotate-180");
-          });
-
-          // Close dropdown when clicking outside
-          document.addEventListener("click", (event) => {
-            if (
-              !dropdownToggle.contains(event.target) &&
-              !dropdownMenu.contains(event.target)
-            ) {
-              dropdownMenu.classList.add("hidden");
-              dropdownIcon.classList.remove("rotate-180");
-            }
-          });
-        </script>
-        <% } %>
+        <%- include('./auth-buttons') %>
       </div>
     </nav>
 
@@ -233,29 +92,9 @@
       class="md:hidden bg-blue-800 text-white"
     >
       <div class="flex flex-col gap-4 p-4">
-        <a href="/" class="text-yellow-700 hover:text-yellow-600">Home</a>
-        <a href="/service" class="hover:text-yellow-600">Service</a>
-        <a href="/contact" class="hover:text-yellow-600">Contact Us</a>
-        <a href="/help" class="hover:text-yellow-600">Help</a>
-        <a href="/blog" class="hover:text-yellow-600">Blogs</a>
-        <% if (!loggedin) { %>
-        <a
-          href="/register"
-          class="bg-teal-700 text-white px-5 py-2 rounded-lg font-semibold shadow-md hover:bg-teal-800"
-          >Signup</a
-        >
-        <a
-          href="/login"
-          class="bg-teal-700 text-white px-5 py-2 rounded-lg font-semibold shadow-md hover:bg-teal-800"
-          >Log In</a
-        >
-        <% } else { %>
-        <a
-          href="/users/logout"
-          class="text-red-500 font-semibold hover:underline"
-          >Logout</a
-        >
-        <% } %>
+        <%- include('./navbar-links') %>
+        <%- include('./role-links') %>
+        <%- include('./auth-buttons') %>
       </div>
     </div>
   </body>

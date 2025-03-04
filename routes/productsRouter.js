@@ -8,20 +8,19 @@ router.get("/", (req, res) => {
 });
 
 //post
-router.post("/create", upload.single("image"), async (req, res) => {
+router.post("/medicines/add", upload.single("image"), async (req, res) => {
   try {
-    let { image, name, price, discount, bgcolor, panelcolor, textcolor } =
-      req.body;
+    let { image, name, description, price, quantity, discount } = req.body;
     let product = await productModel.create({
       image: req.file.buffer,
       name,
       price,
+      quantity,
       discount,
-      bgcolor,
-      panelcolor,
-      textcolor,
+      description,
     });
-    req.flash("success", "Product created successfully");
+    await product.save();
+    req.flash("success", "Medicine created successfully");
     res.redirect("/owners/admin");
   } catch (err) {
     res.send(err.message);
