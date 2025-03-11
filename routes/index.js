@@ -28,7 +28,8 @@ router.get("/", async (req, res) => {
   try {
     let success = req.flash("success");
     let product = await productModel.find();
-    res.render("index", { product, success });
+    let user = await userModel.findOne({ email: req.body.email });
+    res.render("index", { product, success, user });
   } catch (err) {
     console.error("Error fetching cart products:", err);
     res.status(500).send("Internal Server Error");
@@ -59,7 +60,8 @@ router.get("/blog", (req, res) => {
 //route to get forgot password page
 router.get("/forgot-password", (req, res) => {
   let error = req.flash("error");
-  res.render("forgot-password", { error });
+  let success = req.flash("success");
+  res.render("forgot-password", { error, success });
 });
 // Route to post forgot password
 router.post("/forgot-password", async (req, res) => {
@@ -74,7 +76,8 @@ router.post("/forgot-password", async (req, res) => {
         isPasswordReset: true, // Flag to indicate password reset
       };
       sendOTPEmail(user.email, otp); // Send OTP to user's email
-      res.render("otp-verification", { user });
+      req.flash("success", "Please check your email for OTP!");
+      res.redirect("/otp-verification");
     } else {
       req.flash("error", "User not found.");
       res.redirect("/forgot-password");
@@ -86,9 +89,81 @@ router.post("/forgot-password", async (req, res) => {
   }
 });
 
+// Route to render OTP verification page
+router.get("/otp-verification", (req, res) => {
+  let error = req.flash("error");
+  let success = req.flash("success");
+  if (!req.session.user) {
+    return res.redirect("/register"); // If session expires, redirect to register
+  }
+  res.render("otp-verification", { error, success }); // Render OTP input form
+});
+
+//resend otp
+router.get("/resend-otp", async (req, res) => {
+  if (!req.session.user) {
+    return res.redirect("/register"); // If session expires, redirect to register
+  }
+  const { email, otp, otpExpiry } = req.session.user;
+  sendOTPEmail(email, otp);
+  req.flash("success", "OTP sent again successfully!");
+  res.redirect("/otp-verification");
+});
+
+// Route to handle OTP verification for register user
+router.post("/verify-otp", async (req, res) => {
+  const { otp } = req.body;
+  if (!req.session.user) {
+    return res.status(400).send("Session expired. Please register again.");
+  }
+  const {
+    email,
+    fullname,
+    password,
+    address,
+    phone,
+    age,
+    sex,
+    otp: sessionOtp,
+    otpExpiry,
+    isPasswordReset,
+  } = req.session.user; // Get user data from .user;
+
+  // Verify OTP
+  const { success, message } = verifyOTP(otp, sessionOtp, otpExpiry);
+  if (!success) {
+    return res.status(400).send(message);
+  }
+
+  if (isPasswordReset === true) {
+    // Redirect to reset password page
+    res.redirect("/reset-password");
+  } else {
+    const user = new userModel({
+      fullname,
+      email,
+      password,
+      address,
+      age,
+      phone,
+      sex,
+      isVerified: true,
+    });
+    await user.save();
+
+    // Clear session data after successful verification
+    req.session.destroy();
+
+    console.log("OTP verified successfully!");
+    req.flash("success", "OTP verified successfully!");
+    res.redirect("/login");
+  }
+});
+
 // Route to render reset password page
 router.get("/reset-password", (req, res) => {
-  res.render("reset-password");
+  let success = req.flash("success");
+  res.render("reset-password", { success });
 });
 
 // Route to handle reset password form submission
@@ -102,10 +177,9 @@ router.post("/reset-password", async (req, res) => {
   user.password = hashedPassword;
   await user.save();
   // Clear session data after successful password reset
-  req.session.destroy();
-
-  console.log("Password reset successfully!");
+  req.flash("success", "Password reset successfully!");
   res.redirect("/login");
+  req.session.destroy();
 });
 
 module.exports = router;

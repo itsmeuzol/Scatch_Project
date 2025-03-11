@@ -1,0 +1,87 @@
+<%- include('../partials/header') %>
+
+<% if (success.length > 0) { %>
+    <div id="flash-message" class="absolute top-5 left-1/2 -translate-x-1/2 p-3 rounded-md bg-green-500 text-white">
+      <%= success %>
+    </div>
+  <% } %>
+
+<!-- Main Content for Add Prescription Page -->
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-3xl w-full space-y-8">
+    <div class="bg-white/70 backdrop-blur-lg shadow-lg rounded-2xl p-10">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Add Prescription</h1>
+
+      <!-- Prescription Form -->
+      <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Add Prescription</h2>
+        <form action="/doctor/add-prescription" method="POST" class="space-y-6">
+          <!-- Select User -->
+          <div>
+            <label for="user" class="block text-sm font-medium text-gray-700">Select User</label>
+            <select
+              id="user"
+              name="user"
+              class="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="" disabled selected>Select a user</option>
+              <% appointments.forEach(appointment => { %>
+                <option value="<%= appointment.user._id %>"><%= appointment.user.fullname %> - <%= appointment.service %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <!-- Medication -->
+          <div>
+            <label for="medication" class="block text-sm font-medium text-gray-700">Medication</label>
+            <input
+              type="text"
+              id="medication"
+              name="medication"
+              placeholder="Enter medication name"
+              class="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <!-- Dosage -->
+          <div>
+            <label for="dosage" class="block text-sm font-medium text-gray-700">Dosage</label>
+            <input
+              type="text"
+              id="dosage"
+              name="dosage"
+              placeholder="Enter dosage (e.g., 500mg)"
+              class="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            />
+          </div>
+
+          <!-- Instructions -->
+          <div>
+            <label for="instructions" class="block text-sm font-medium text-gray-700">Instructions</label>
+            <textarea
+              id="instructions"
+              name="instructions"
+              rows="4"
+              placeholder="Enter instructions (e.g., Take twice a day after meals)"
+              class="mt-1 block w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            ></textarea>
+          </div>
+
+          <!-- Submit Button -->
+          <button
+            type="submit"
+            class="w-full bg-blue-500 text-white px-6 py-3 rounded-md hover:bg-blue-600 transition"
+          >
+            Add Prescription
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

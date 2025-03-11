@@ -1,0 +1,51 @@
+<%- include('./partials/header') %>
+
+<!-- Main Content for View Prescription Page -->
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-3xl w-full space-y-8">
+    <div class="bg-white/70 backdrop-blur-lg shadow-lg rounded-2xl p-10">
+      <h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">Prescription Details</h1>
+
+      <% prescription.forEach((prescription, index) => { %>
+      <!-- Prescription Information -->
+      <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4"><%= index + 1 %>. Prescription for <%= prescription.appointment.service %></h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Medication</label>
+            <p class="mt-1 text-gray-900"><%= prescription.medication %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Dosage</label>
+            <p class="mt-1 text-gray-900"><%= prescription.dosage %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Instructions</label>
+            <p class="mt-1 text-gray-900"><%= prescription.instructions %></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Doctor Information -->
+      <div class="bg-white shadow-md rounded-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-4">Prescribed By</h2>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Doctor Name</label>
+            <p class="mt-1 text-gray-900"><%= prescription.doctor.fullname %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Contact Number</label>
+            <p class="mt-1 text-gray-900"><%= prescription.doctor.phone %></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <hr class="border-t-2 border-gray-300 my-8">
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer') %>

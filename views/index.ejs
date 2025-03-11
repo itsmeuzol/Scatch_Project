@@ -20,13 +20,16 @@
       <a
         href="/users/cart"
         class="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition duration-300"
-        >Shop Now</a
+        >Check Cart</a
       >
-      <a
-        href="/users/appointment"
-        class="ml-4 bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition duration-300"
-        >Make Appointment</a
-      >
+        <a
+          href="/users/appointment"
+          class="ml-4 bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition duration-300"
+        >
+          Make Appointment
+        </a>
+        
+      
     </div>
   </div>
 
@@ -80,12 +83,14 @@
 
         <!-- Add to Cart Button -->
         <div class="text-center mt-3">
-          <a
-            href="users/addtocart/<%= product._id %>"
-            class="inline-block bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-3 rounded-full text-md font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
-          >
-            Add to Cart
-          </a>
+          <form action="/users/addtocart/<%= product._id %>" method="POST">
+            <button
+              type="submit"
+              class="inline-block bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-5 py-3 rounded-full text-md font-semibold transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            >
+              Add to Cart
+            </button>
+          </form>
         </div>
       </div>
       <% }) %>

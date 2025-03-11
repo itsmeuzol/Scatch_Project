@@ -1,4 +1,9 @@
 <%- include('./partials/header') %>
+<% if (success.length > 0) { %>
+  <div id="flash-message" class="absolute top-5 left-1/2 -translate-x-1/2 p-3 rounded-md bg-green-500 text-white">
+    <%= success %>
+  </div>
+<% } %>
 
 <!-- Main Content for OTP Verification Page -->
 <div
@@ -10,7 +15,7 @@
     </h4>
 
     <!-- OTP Verification Form -->
-    <form action="/users/verify-otp" method="POST" class="space-y-4">
+    <form action="/verify-otp" method="POST" class="space-y-4">
       <!-- OTP Input -->
       <div class="relative">
         <input

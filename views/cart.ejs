@@ -1,75 +1,61 @@
-<%- include('./partials/header') %> <% if (success.length > 0) { %>
+<%- include('./partials/header') %>
+
+<% if (success.length > 0) { %>
 <div
   id="flash-message"
   class="absolute top-5 left-1/2 -translate-x-1/2 p-3 rounded-md bg-green-500 text-white shadow-lg transition-opacity duration-500"
 >
   <%= success %>
 </div>
-<% } %> <% if (user.cart.length === 0) { %>
+<% } %>
+
+<% if (cartItems.length === 0) { %>
 <div class="w-full text-center py-10">
-  <h2 class="text-xl font-semibold text-gray-500">
-    No items added to the cart.
-  </h2>
+  <h2 class="text-xl font-semibold text-gray-500">No items added to the cart.</h2>
 </div>
 <% } else { %>
 
 <div class="w-full min-h-screen px-5 md:px-20 py-10 flex flex-col gap-10">
-  <% let grandTotal = 0; %> <% user.cart.forEach(function(item) { let totalPrice
-  = Number(item.price) - Number(item.discount); grandTotal += totalPrice; %>
+  <% let grandTotal = 0; %>
+  
+  <% cartItems.forEach(function(item) { 
+      let totalPrice = (Number(item.productId.price) - Number(item.productId.discount)) * item.quantity;
+      grandTotal += totalPrice;
+  %>
 
-  <div
-    class="flex flex-col md:flex-row items-start gap-10 bg-white shadow-lg rounded-lg p-5 md:p-8"
-  >
+  <div class="flex flex-col md:flex-row items-start gap-10 bg-white shadow-lg rounded-lg p-5 md:p-8">
     <!-- Product Image & Info -->
     <div class="w-full md:w-[30%] rounded-md overflow-hidden">
-      <div
-        class="w-full flex justify-center items-center h-40 bg-[<%= item.bgcolor %>] rounded-t-lg"
-      >
-        <img
-          class="h-[10rem] object-cover"
-          src="data:image/jpeg;base64,<%= item.image.toString('base64') %>"
-          alt="<%= item.name %>"
+      <div class="w-full flex justify-center items-center h-40 bg-[<%= item.productId.bgcolor %>] rounded-t-lg">
+        <img class="h-[10rem] object-cover"
+          src="data:image/jpeg;base64,<%= item.productId.image.toString('base64') %>"
+          alt="<%= item.productId.name %>"
         />
       </div>
 
-      <div
-        class="w-full flex justify-between px-5 py-4 bg-gray-200 rounded-b-lg"
-      >
-        <h3 class="text-lg font-semibold"><%= item.name %></h3>
+      <div class="w-full flex justify-between px-5 py-4 bg-gray-200 rounded-b-lg">
+        <h3 class="text-lg font-semibold"><%= item.productId.name %></h3>
 
         <!-- Quantity Controls -->
         <div class="flex items-center gap-2">
-          <button
-            type="button"
-            class="bg-gray-400 text-gray-700 px-3 py-1 rounded-xl hover:bg-gray-500 transition"
-            onclick="decreaseQuantity('<%= item._id %>')"
-          >
+          <button type="button" class="bg-gray-400 text-gray-700 px-3 py-1 rounded-xl hover:bg-gray-500 transition"
+            onclick="decreaseQuantity('<%= item._id %>')">
             -
           </button>
           <div class="px-3 py-1 rounded-md bg-white text-black font-semibold">
-            <input
-              id="quantity-<%= item._id %>"
-              type="text"
-              value="1"
-              class="w-10 text-center border rounded-md"
-              readonly
-            />
+            <input id="quantity-<%= item._id %>" type="text" value="<%= item.quantity %>"
+              class="w-10 text-center border rounded-md" readonly />
           </div>
-          <button
-            type="button"
-            class="bg-gray-400 text-gray-700 px-3 py-1 rounded-xl hover:bg-gray-500 transition"
-            onclick="increaseQuantity('<%= item._id %>')"
-          >
+          <button type="button" class="bg-gray-400 text-gray-700 px-3 py-1 rounded-xl hover:bg-gray-500 transition"
+            onclick="increaseQuantity('<%= item._id %>')">
             +
           </button>
         </div>
       </div>
 
-      <div
-        class="flex text-white items-center justify-between px-5 py-3 bg-gray-800 rounded-b-lg"
-      >
+      <div class="flex text-white items-center justify-between px-5 py-3 bg-gray-800 rounded-b-lg">
         <h4 class="text-sm font-medium">Price</h4>
-        <h2 class="text-sm font-semibold">Rs. <%= item.price %></h2>
+        <h2 class="text-sm font-semibold">Rs. <%= item.productId.price %></h2>
       </div>
     </div>
 
@@ -79,12 +65,16 @@
       <div class="space-y-3 text-gray-800">
         <div class="flex justify-between">
           <h4 class="font-medium">Total MRP</h4>
-          <h4>Rs. <%= item.price %></h4>
+          <h4>Rs. <%= item.productId.price * item.quantity %></h4>
+        </div>
+        <div class="flex justify-between">
+          <h4 class="font-medium">Quantity</h4>
+          <h4 class="text-red-500"><%= item.quantity %></h4>
         </div>
 
         <div class="flex justify-between">
-          <h4 class="font-medium">Discount</h4>
-          <h4 class="text-red-500">- Rs. <%= Number(item.discount) %></h4>
+          <h4 class="font-medium">Total Discount</h4>
+          <h4 class="text-red-500">- Rs. <%= Number(item.productId.discount) * item.quantity %></h4>
         </div>
         <div class="flex justify-between">
           <h4 class="font-medium">Net Total</h4>
@@ -93,15 +83,8 @@
       </div>
 
       <!-- Delete Item Button -->
-      <form
-        action="/users/cart/delete/<%= item._id %>"
-        method="POST"
-        class="mt-3"
-      >
-        <button
-          type="submit"
-          class="w-full bg-red-500 text-white font-semibold py-3 rounded-md shadow-md hover:bg-red-600 transition flex items-center justify-center gap-2"
-        >
+      <form action="/users/cart/delete/<%= item._id %>" method="POST" class="mt-3">
+        <button type="submit" class="w-full bg-red-500 text-white font-semibold py-3 rounded-md shadow-md hover:bg-red-600 transition flex items-center justify-center gap-2">
           <i class="ri-delete-bin-6-line"></i> Remove from Cart
         </button>
       </form>
@@ -111,9 +94,7 @@
   <% }); %>
 
   <!-- Checkout Section -->
-  <div
-    class="w-full bg-white shadow-lg rounded-lg p-6 md:p-10 flex flex-col gap-4 text-center"
-  >
+  <div class="w-full bg-white shadow-lg rounded-lg p-6 md:p-10 flex flex-col gap-4 text-center">
     <h3 class="text-xl font-bold">Order Summary</h3>
 
     <!-- Grand Total -->
@@ -123,16 +104,16 @@
     </div>
 
     <!-- Proceed to Checkout -->
-    <a
-      href="/users/checkout"
-      class="block w-full bg-blue-600 text-white font-semibold py-3 rounded-md shadow-md text-center hover:bg-blue-700 transition"
-    >
+    <a href="/users/checkout"
+      class="block w-full bg-blue-600 text-white font-semibold py-3 rounded-md shadow-md text-center hover:bg-blue-700 transition">
       Proceed to Checkout
     </a>
   </div>
 </div>
 
-<% } %> <%- include('./partials/footer') %>
+<% } %>
+
+<%- include('./partials/footer') %>
 
 <!-- Include the quantity-selector.js script -->
 <script src="/scripts/quantity-selector.js"></script>

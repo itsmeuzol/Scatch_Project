@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookie = require("cookie-parser");
 const isLoggedIn = require("../middlewares/isLoggedIn");
-const { verifyOTP } = require("../utils/emailService");
+const { verifyOTP, sendOTPEmail } = require("../utils/emailService");
 const { generateToken } = require("../utils/generateToken");
 const {
   checkExistingAppointment,
@@ -18,7 +18,8 @@ const {
   loginUser,
   logout,
 } = require("../controllers/authController");
-const productModel = require("../models/product-model");
+const prescriptionModel = require("../models/prescription-model");
+const cartModel = require("../models/cart-model");
 
 //register
 router.get("/register", (req, res) => {
@@ -26,63 +27,6 @@ router.get("/register", (req, res) => {
 });
 
 router.post("/register", registerUser);
-
-// Route to render OTP verification page
-router.get("/otp-verification", (req, res) => {
-  if (!req.session.user) {
-    return res.redirect("/register"); // If session expires, redirect to register
-  }
-  res.render("otp-verification"); // Render OTP input form
-});
-
-// Route to handle OTP verification for register user
-router.post("/verify-otp", async (req, res) => {
-  const { otp } = req.body;
-  if (!req.session.user) {
-    return res.status(400).send("Session expired. Please register again.");
-  }
-  const {
-    email,
-    fullname,
-    password,
-    address,
-    phone,
-    age,
-    sex,
-    otp: sessionOtp,
-    otpExpiry,
-    isPasswordReset,
-  } = req.session.user; // Get user data from .user;
-
-  // Verify OTP
-  const { success, message } = verifyOTP(otp, sessionOtp, otpExpiry);
-  if (!success) {
-    return res.status(400).send(message);
-  }
-
-  if (isPasswordReset === true) {
-    // Redirect to reset password page
-    res.redirect("/reset-password");
-  } else {
-    const user = new userModel({
-      fullname,
-      email,
-      password,
-      address,
-      age,
-      phone,
-      sex,
-      isVerified: true,
-    });
-    await user.save();
-
-    // Clear session data after successful verification
-    req.session.destroy();
-
-    console.log("OTP verified successfully!");
-    res.redirect("/login");
-  }
-});
 
 //login
 router.post("/login", loginUser);
@@ -267,60 +211,115 @@ router.get("/user-dashboard", async (req, res) => {
 });
 
 /** Thi is addtocart part */
-
-router.get("/addtocart/:id", isLoggedIn, async (req, res) => {
-  let user = await userModel.findOne({ email: req.user.email });
-  user.cart.push(req.params.id);
-  await user.save();
-  req.flash("success", "Product added to cart");
-  res.redirect("/");
-});
-
 //addtocart
-router.get("/cart", isLoggedIn, async (req, res) => {
+
+// router.get("/addtocart/:id", isLoggedIn, async (req, res) => {
+//   let user = await userModel.findOne({ email: req.user.email });
+//   user.cart.push(req.params.id);
+//   await user.save();
+//   req.flash("success", "Product added to cart");
+//   res.redirect("/");
+// });
+
+// Add product to cart or update quantity if it already exists
+router.post("/addtocart/:productId", isLoggedIn, async (req, res) => {
   try {
-    let success = req.flash("success"); // Get flash message
-    let user = await userModel
-      .findOne({ email: req.user.email })
-      .populate("cart");
-    res.render("cart", { success, user });
+    const { productId } = req.params;
+    const userId = req.user._id; // Get logged-in user's ID
+    const quantityToAdd = parseInt(req.body.quantity) || 1;
+
+    // Check if the product already exists in the user's cart
+    let cartItem = await cartModel.findOne({ userId, productId });
+
+    if (cartItem) {
+      // If exists, update quantity instead of adding a duplicate
+      cartItem.quantity += quantityToAdd;
+      await cartItem.save();
+    } else {
+      // If not exists, create a new cart entry
+      await cartModel.create({ userId, productId, quantity: quantityToAdd });
+    }
+
+    req.flash("success", "Item added to cart successfully!");
+    res.redirect("/");
   } catch (error) {
-    console.error("Error fetching item details:", error);
+    console.error("Error adding to cart:", error);
+    res.redirect("/users/cart");
   }
 });
+
+//this will show added cart items in page
+router.get("/cart", isLoggedIn, async (req, res) => {
+  try {
+    let success = req.flash("success");
+
+    // Populate cart items along with their quantities
+    let cartItems = await cartModel
+      .find({ userId: req.user._id })
+      .populate("productId");
+
+    res.render("cart", { success, cartItems });
+  } catch (error) {
+    console.error("Error fetching cart items:", error);
+    res.redirect("/");
+  }
+});
+
 //delete cart item
-router.post("/cart/delete/:medicine_id", isLoggedIn, async (req, res) => {
-  let user = await userModel.findOne({ email: req.user.email });
-  let index = user.cart.indexOf(req.params.medicine_id);
-  user.cart.splice(index, 1);
-  await user.save();
-  req.flash("success", "Product removed from cart");
-  res.redirect("/users/cart");
+router.post("/cart/delete/:cartItemId", isLoggedIn, async (req, res) => {
+  try {
+    // Delete the cart item using its _id
+    await cartModel.findOneAndDelete({
+      _id: req.params.cartItemId,
+      userId: req.user._id,
+    });
+
+    req.flash("success", "Product removed from cart");
+    res.redirect("/users/cart");
+  } catch (error) {
+    console.error("Error deleting cart item:", error);
+    req.flash("error", "Failed to remove item from cart");
+    res.redirect("/users/cart");
+  }
 });
 
 // Checkout Page Route
 router.get("/checkout", isLoggedIn, async (req, res) => {
   try {
-    const user = await userModel
-      .findOne({ email: req.user.email })
-      .populate("cart");
+    // Find all cart items for the logged-in user
+    const cartItems = await cartModel
+      .find({ userId: req.user._id })
+      .populate("productId");
 
-    const items = user.cart.map((cartItem) => ({
-      _id: cartItem._id,
-      name: cartItem.name,
-      price: cartItem.price,
-      quantity: cartItem.quantity,
-    }));
+    if (!cartItems.length) {
+      req.flash("error", "Your cart is empty!");
+      return res.redirect("/users/cart");
+    }
+
+    // Map cart items to include required details
+    const items = cartItems.map((cartItem) => {
+      const discount = cartItem.productId.discount || 0;
+      const price = cartItem.productId.price;
+      const discountedPrice = price - (price * discount) / 100;
+      return {
+        _id: cartItem._id,
+        name: cartItem.productId.name,
+        discount,
+        price,
+        discountedPrice,
+        quantity: cartItem.quantity,
+      };
+    });
 
     // Calculate subtotal
     const subtotal = items.reduce(
-      (total, cartItem) => total + cartItem.price * cartItem.quantity,
+      (total, cartItem) => total + cartItem.discountedPrice * cartItem.quantity,
       0
     );
 
-    // Example discount logic (replace with your actual discount logic)
-    const discountApplied = false; // Set to true if a discount is applied
-    const totalPriceAfterDiscount = discountApplied ? subtotal * 0.9 : subtotal; // 10% discount
+    // Example discount logic (replace with actual discount logic)
+    const discountApplied = false; // Change based on actual discount criteria
+    const totalPriceAfterDiscount = discountApplied ? subtotal * 0.9 : subtotal; // 10% discount if applied
 
     res.render("checkout", {
       items,
@@ -331,7 +330,7 @@ router.get("/checkout", isLoggedIn, async (req, res) => {
   } catch (error) {
     console.error("Error fetching cart items:", error);
     req.flash("error", "Error fetching cart items.");
-    res.redirect("/some-error-page"); // Redirect to an error page or handle accordingly
+    res.redirect("/users/cart"); // Redirect back to the cart page in case of an error
   }
 });
 
@@ -348,15 +347,26 @@ router.post("/apply-discount", (req, res) => {
   }
 });
 
-// Process Payment Route
-router.post("/process-payment", (req, res) => {
-  const { cardNumber, expiryDate, cvv, cardName } = req.body;
+// Render View Prescription Page
+router.get("/view-prescription", isLoggedIn, async (req, res) => {
+  try {
+    const userId = req.user._id; // Assuming req.user contains the logged-in user's details
 
-  // Add your payment processing logic here
-  console.log("Payment Details:", { cardNumber, expiryDate, cvv, cardName });
+    // Fetch the prescription details and ensure it belongs to the logged-in user
+    const prescription = await prescriptionModel
+      .find({ user: userId })
+      .populate("doctor appointment", "fullname phone service");
 
-  // Redirect to a success page
-  res.redirect("/payment-success");
+    if (!prescription || prescription.length === 0) {
+      return res.status(404).send("No prescriptions found for this user.");
+    }
+
+    // Render the view prescription page
+    res.render("view-prescription", { prescription });
+  } catch (error) {
+    console.error("Error fetching prescription details:", error);
+    res.status(500).send("Error loading page.");
+  }
 });
 
 module.exports = router;
