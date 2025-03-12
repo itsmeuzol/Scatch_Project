@@ -21,12 +21,6 @@ module.exports.registerUser = async (req, res) => {
       return res.redirect("/register");
     }
 
-    // // Validate required fields
-    // if (!email || !fullname || !password || !address) {
-    //   req.flash("error", "Please fill all the fields.");
-    //   return res.redirect("/register");
-    // }
-
     // Generate hashed password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -54,7 +48,7 @@ module.exports.registerUser = async (req, res) => {
     // Send OTP via Email
     sendOTPEmail(email, otp);
 
-    return res.redirect("/users/otp-verification");
+    return res.redirect("/otp-verification");
   } catch (err) {
     console.error("Error registering user:", err);
     res.status(500).send("Internal Server Error");

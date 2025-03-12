@@ -6,8 +6,6 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookie = require("cookie-parser");
 const isLoggedIn = require("../middlewares/isLoggedIn");
-const { verifyOTP, sendOTPEmail } = require("../utils/emailService");
-const { generateToken } = require("../utils/generateToken");
 const {
   checkExistingAppointment,
   checkAppointmentLimit,
@@ -20,11 +18,6 @@ const {
 } = require("../controllers/authController");
 const prescriptionModel = require("../models/prescription-model");
 const cartModel = require("../models/cart-model");
-
-//register
-router.get("/register", (req, res) => {
-  res.render("register");
-});
 
 router.post("/register", registerUser);
 
@@ -209,17 +202,6 @@ router.get("/user-dashboard", async (req, res) => {
     res.status(500).send("Error loading dashboard.");
   }
 });
-
-/** Thi is addtocart part */
-//addtocart
-
-// router.get("/addtocart/:id", isLoggedIn, async (req, res) => {
-//   let user = await userModel.findOne({ email: req.user.email });
-//   user.cart.push(req.params.id);
-//   await user.save();
-//   req.flash("success", "Product added to cart");
-//   res.redirect("/");
-// });
 
 // Add product to cart or update quantity if it already exists
 router.post("/addtocart/:productId", isLoggedIn, async (req, res) => {
