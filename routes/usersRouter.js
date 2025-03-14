@@ -250,17 +250,34 @@ router.get("/cart", isLoggedIn, async (req, res) => {
 //delete cart item
 router.post("/cart/delete/:cartItemId", isLoggedIn, async (req, res) => {
   try {
-    // Delete the cart item using its _id
-    await cartModel.findOneAndDelete({
+    // Find the cart item using its _id and the user's _id
+    const cartItem = await cartModel.findOne({
       _id: req.params.cartItemId,
       userId: req.user._id,
     });
 
-    req.flash("success", "Product removed from cart");
+    if (!cartItem) {
+      req.flash("error", "Cart item not found.");
+      return res.redirect("/users/cart");
+    }
+
+    // Decrease the quantity or remove the item if the quantity is 1
+    if (cartItem.quantity > 1) {
+      cartItem.quantity -= 1;
+      await cartItem.save();
+      req.flash("success", "Product quantity decreased by 1.");
+    } else {
+      await cartModel.findOneAndDelete({
+        _id: req.params.cartItemId,
+        userId: req.user._id,
+      });
+      req.flash("success", "Product removed from cart.");
+    }
+
     res.redirect("/users/cart");
   } catch (error) {
     console.error("Error deleting cart item:", error);
-    req.flash("error", "Failed to remove item from cart");
+    req.flash("error", "Failed to remove item from cart.");
     res.redirect("/users/cart");
   }
 });

@@ -5,9 +5,6 @@ const session = require("express-session");
 const flash = require("connect-flash");
 
 const db = require("./config/mongoose-connection");
-const Owner = require("./models/owner-model");
-const Product = require("./models/product-model");
-const User = require("./models/user-model");
 
 const authMiddleware = require("./middlewares/isLoggedIn"); // Import middleware
 
@@ -18,8 +15,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cookieParser());
 app.set("view engine", "ejs");
 app.use(authMiddleware); // Apply middleware globally

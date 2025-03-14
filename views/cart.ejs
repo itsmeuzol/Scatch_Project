@@ -116,4 +116,40 @@
 <%- include('./partials/footer') %>
 
 <!-- Include the quantity-selector.js script -->
-<script src="/scripts/quantity-selector.js"></script>
+<script src="https://khalti.com/static/khalti-checkout.js"></script>
+<script>
+  import KhaltiCheckout from "khalti-web";
+
+  let config = {
+    "publicKey": "test_public_key_cccf2b4303774f78a5aea1a20aef1055", // Replace with your live key
+    "productIdentity": "cart_<%= user._id %>",
+    "productName": "Swostha samaj",
+    "productUrl": window.location.href,
+    "eventHandler": {
+      onSuccess(payload) {
+        console.log(payload);
+        alert("Payment Successful!");
+        window.location.href = "/success"; // Redirect after success
+      },
+      onError(error) {
+        console.log(error);
+        alert("Payment Failed!");
+      }
+    },
+    "paymentPreference": [
+      "MOBILE_BANKING",
+      "KHALTI",
+      "EBANKING",
+      "CONNECT_IPS",
+      "SCT",
+    ],
+  };
+
+  let checkout = new KhaltiCheckout(config);
+  let btn = document.getElementById("khalti-button");
+
+  btn.onclick = function () {
+    let totalAmount = 100 * 100; // Khalti expects amount in paisa
+    checkout.show({ amount: totalAmount });
+  };
+</script>

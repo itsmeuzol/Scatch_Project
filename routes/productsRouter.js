@@ -10,7 +10,7 @@ router.get("/", (req, res) => {
 //post
 router.post("/medicines/add", upload.single("image"), async (req, res) => {
   try {
-    let { image, name, description, price, quantity, discount } = req.body;
+    let { name, description, price, quantity, discount } = req.body;
     let product = await productModel.create({
       image: req.file.buffer,
       name,

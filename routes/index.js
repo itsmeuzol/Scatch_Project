@@ -27,15 +27,19 @@ router.get("/login", (req, res) => {
 router.get("/", async (req, res) => {
   try {
     let success = req.flash("success");
+    let error = req.flash("error");
     let product = await productModel.find();
-    let user = await userModel.findOne({ email: req.body.email });
-    res.render("index", { product, success, user });
+    res.render("index", { product, success, user: req.user, error });
   } catch (err) {
     console.error("Error fetching cart products:", err);
     res.status(500).send("Internal Server Error");
   }
 });
 
+router.post("/buynow", async (req, res) => {
+  req.flash("error", "You Need to Login First!");
+  res.redirect("/");
+});
 //service
 router.get("/service", (req, res) => {
   res.render("service");
@@ -155,7 +159,7 @@ router.post("/verify-otp", async (req, res) => {
     req.session.destroy();
 
     console.log("OTP verified successfully!");
-    req.flash("success", "OTP verified successfully!");
+    // req.flash("success", "OTP verified successfully!");
     res.redirect("/login");
   }
 });

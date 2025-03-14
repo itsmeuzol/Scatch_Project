@@ -1,19 +1,35 @@
 // filepath: /e:/learning process/jenishProject/fyp/public/js/khalti-payment.js
 document.getElementById("khalti-button").addEventListener("click", function () {
-  new KhaltiCheckout({
-    publicKey: "test_public_key_dc74b93b7b124b3e83e6a03a8f312b22", // Replace with your live key
-    productIdentity: "cart_checkout",
-    productName: "Cart Items",
+  let config = {
+    publicKey: "cccf2b4303774f78a5aea1a20aef1055", // Replace with your live key
+    productIdentity: "Cart_Items",
+    productName: "Your Cart",
     productUrl: window.location.href,
     eventHandler: {
       onSuccess(payload) {
+        console.log(payload);
         alert("Payment Successful!");
-        window.location.href = "/success";
+        window.location.href = "/success"; // Redirect after success
       },
       onError(error) {
-        console.error(error);
+        console.log(error);
         alert("Payment Failed!");
       },
     },
-  }).show({ amount: 1000 * 100 }); // Replace 1000 with cart total
+    paymentPreference: [
+      "MOBILE_BANKING",
+      "KHALTI",
+      "EBANKING",
+      "CONNECT_IPS",
+      "SCT",
+    ],
+  };
+
+  let checkout = new KhaltiCheckout(config);
+  let btn = document.getElementById("khalti-button");
+
+  btn.onclick = function () {
+    let totalAmount = 100 * 100; // Khalti expects amount in paisa
+    checkout.show({ amount: totalAmount });
+  };
 });
