@@ -21,11 +21,19 @@
       <div class="flex items-center space-x-4">
         <!-- Avatar -->
         <div
-          class="w-24 h-24 rounded-full bg-blue-500 flex items-center justify-center"
+          class="w-24 h-24 rounded-full bg-blue-500 flex items-center justify-center overflow-hidden"
         >
+          <% if (user.avatar) { %>
+          <img
+            src="data:image/jpeg;base64,<%= user.avatar.toString('base64') %>"
+            alt="Avatar"
+            class="w-full h-full object-cover"
+          />
+          <% } else { %>
           <span class="text-white text-3xl font-semibold"
             ><%= user.fullname[0] %></span
           >
+          <% } %>
         </div>
 
         <!-- User Details -->
@@ -35,6 +43,30 @@
           </h2>
           <p class="text-gray-600"><%= user.email %></p>
         </div>
+      </div>
+
+      <!-- Upload Avatar Form -->
+      <div class="mt-4">
+        <form
+          action="/users/upload-avatar"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <label class="block text-sm font-medium text-gray-700"
+            >Upload Avatar</label
+          >
+          <input
+            type="file"
+            name="avatar"
+            class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+          />
+          <button
+            type="submit"
+            class="mt-2 inline-flex items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg hover:from-teal-600 hover:to-blue-600 transition duration-300"
+          >
+            Upload
+          </button>
+        </form>
       </div>
 
       <!-- Additional Profile Information (Horizontal Layout) -->

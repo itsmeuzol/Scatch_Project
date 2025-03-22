@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookie = require("cookie-parser");
 const isLoggedIn = require("../middlewares/isLoggedIn");
+const upload = require("../config/multer-config");
 const {
   checkExistingAppointment,
   checkAppointmentLimit,
@@ -18,6 +19,8 @@ const {
 } = require("../controllers/authController");
 const prescriptionModel = require("../models/prescription-model");
 const cartModel = require("../models/cart-model");
+const vaccineModel = require("../models/vaccine-model");
+const bookingModel = require("../models/booking-model");
 
 router.post("/register", registerUser);
 
@@ -67,6 +70,31 @@ router.get("/profile", isLoggedIn, async (req, res) => {
   let user = await userModel.findOne({ email: req.user.email });
   let success = req.flash("success");
   res.render("profile", { user, success });
+});
+
+//upload avatar
+router.post("/upload-avatar", upload.single("avatar"), async (req, res) => {
+  try {
+    const userId = req.user._id; // Assuming you have user authentication
+    const avatar = req.file.buffer;
+
+    // Find the user and update the avatar
+    const user = await userModel.findById(userId);
+    if (!user) {
+      req.flash("error", "User not found.");
+      return res.redirect("/users/profile");
+    }
+
+    user.avatar = avatar;
+    await user.save();
+
+    req.flash("success", "Avatar updated successfully.");
+    res.redirect("/users/profile");
+  } catch (error) {
+    console.error("Error uploading avatar:", error);
+    req.flash("error", "An error occurred while uploading the avatar.");
+    res.redirect("/users/profile");
+  }
 });
 
 //edit-profile
@@ -121,7 +149,7 @@ router.get("/appointment", isLoggedIn, (req, res) => {
   if (!req.user) {
     return res.redirect("/login");
   }
-  res.render("appointment", { success, error });
+  res.render("appointment", { success, error, user: req.user });
 });
 
 // Post-appointment
@@ -240,7 +268,7 @@ router.get("/cart", isLoggedIn, async (req, res) => {
       .find({ userId: req.user._id })
       .populate("productId");
 
-    res.render("cart", { success, cartItems });
+    res.render("cart", { success, cartItems, user: req.user });
   } catch (error) {
     console.error("Error fetching cart items:", error);
     res.redirect("/");
@@ -262,22 +290,41 @@ router.post("/cart/delete/:cartItemId", isLoggedIn, async (req, res) => {
     }
 
     // Decrease the quantity or remove the item if the quantity is 1
-    if (cartItem.quantity > 1) {
-      cartItem.quantity -= 1;
-      await cartItem.save();
-      req.flash("success", "Product quantity decreased by 1.");
-    } else {
-      await cartModel.findOneAndDelete({
-        _id: req.params.cartItemId,
-        userId: req.user._id,
-      });
-      req.flash("success", "Product removed from cart.");
-    }
+
+    await cartModel.findOneAndDelete({
+      _id: req.params.cartItemId,
+      userId: req.user._id,
+    });
+    req.flash("success", "Product removed from cart.");
 
     res.redirect("/users/cart");
   } catch (error) {
     console.error("Error deleting cart item:", error);
     req.flash("error", "Failed to remove item from cart.");
+    res.redirect("/users/cart");
+  }
+});
+//update quantity whenever user click tick and set new quantity
+router.post("/cart/updateQuantity/:itemId", async (req, res) => {
+  try {
+    const itemId = req.params.itemId;
+    const { quantity } = req.body;
+
+    // Find the cart item and update the quantity
+    const cartItem = await cartModel.findById(itemId);
+    if (!cartItem) {
+      req.flash("error", "Cart item not found.");
+      return res.redirect("/users/cart"); // Redirect to cart page
+    }
+
+    cartItem.quantity = quantity;
+    await cartItem.save();
+
+    req.flash("success", "Quantity updated successfully.");
+    res.redirect("/users/cart"); // Redirect back to cart after updating
+  } catch (error) {
+    console.error("Error updating quantity:", error);
+    req.flash("error", "An error occurred while updating the quantity.");
     res.redirect("/users/cart");
   }
 });
@@ -365,6 +412,107 @@ router.get("/view-prescription", isLoggedIn, async (req, res) => {
   } catch (error) {
     console.error("Error fetching prescription details:", error);
     res.status(500).send("Error loading page.");
+  }
+});
+
+//vaccine part//......
+// Render Vaccines Page
+router.get("/vaccines", async (req, res) => {
+  try {
+    // Fetch all available vaccines
+    const vaccines = await vaccineModel.find({ availableSlots: { $gt: 0 } });
+
+    // Render the vaccines page
+    res.render("vaccines", { vaccines });
+  } catch (error) {
+    console.error("Error fetching vaccines:", error);
+    res.status(500).send("Error loading vaccines.");
+  }
+});
+
+// Render Book Vaccine Page
+router.get("/book-vaccine/:vaccineId", async (req, res) => {
+  try {
+    const vaccineId = req.params.vaccineId;
+
+    // Fetch the vaccine details
+    const vaccine = await vaccineModel.findById(vaccineId);
+
+    if (!vaccine) {
+      return res.status(404).send("Vaccine not found.");
+    }
+
+    // Render the book vaccine page
+    res.render("book-vaccine", { vaccine });
+  } catch (error) {
+    console.error("Error fetching vaccine details:", error);
+    res.status(500).send("Error loading page.");
+  }
+});
+
+// Handle Vaccine Booking
+router.post("/book-vaccine/:vaccineId", async (req, res) => {
+  try {
+    const vaccineId = req.params.vaccineId;
+    const userId = req.user._id; // Assuming req.user contains the logged-in user's details
+
+    // Fetch the vaccine
+    const vaccine = await vaccineModel.findById(vaccineId);
+
+    if (!vaccine) {
+      return res.status(404).send("Vaccine not found.");
+    }
+
+    // Check if slots are available
+    if (vaccine.availableSlots <= 0) {
+      return res.status(400).send("No slots available for this vaccine.");
+    }
+
+    // Generate a unique ticket ID
+    const ticketId = `TICKET-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+
+    // Create a new booking
+    const newBooking = new bookingModel({
+      user: userId,
+      vaccine: vaccineId,
+      ticketId,
+    });
+
+    // Save the booking
+    await newBooking.save();
+
+    // Decrease the available slots for the vaccine
+    vaccine.availableSlots -= 1;
+    await vaccine.save();
+
+    // Redirect to the ticket page
+    res.redirect(`/users/vaccine-ticket/${newBooking._id}`);
+  } catch (error) {
+    console.error("Error booking vaccine:", error);
+    res.status(500).send("Error booking vaccine.");
+  }
+});
+
+// Render Vaccine Ticket Page
+router.get("/vaccine-ticket/:bookingId", async (req, res) => {
+  try {
+    const bookingId = req.params.bookingId;
+
+    // Fetch the booking details and populate the vaccine and user details
+    const booking = await bookingModel
+      .findById(bookingId)
+      .populate("user", "fullname email")
+      .populate("vaccine", "name hospital");
+
+    if (!booking) {
+      return res.status(404).send("Booking not found.");
+    }
+
+    // Render the ticket page
+    res.render("vaccine-ticket", { booking });
+  } catch (error) {
+    console.error("Error fetching booking details:", error);
+    res.status(500).send("Error loading ticket.");
   }
 });
 

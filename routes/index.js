@@ -4,6 +4,7 @@ const isLoggedIn = require("../middlewares/isLoggedIn");
 const productModel = require("../models/product-model");
 const userModel = require("../models/user-model");
 const appointmentModel = require("../models/appointment-model");
+const contactModel = require("../models/contact-model");
 const bcrypt = require("bcrypt");
 const {
   sendOTPEmail,
@@ -51,7 +52,16 @@ router.get("/about", (req, res) => {
 
 //contact us
 router.get("/contact", (req, res) => {
-  res.render("contact");
+  let success = req.flash("success");
+  res.render("contact", { success });
+});
+//for contact us message
+router.post("/contact", async (req, res) => {
+  const { name, email, message } = req.body;
+  const contact = new contactModel({ name, email, message });
+  await contact.save();
+  req.flash("success", "Message sent successfully!");
+  res.redirect("/contact");
 });
 //help
 router.get("/help", (req, res) => {

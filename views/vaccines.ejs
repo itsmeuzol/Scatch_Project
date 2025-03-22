@@ -1,0 +1,28 @@
+<%- include('./partials/header') %>
+
+<!-- Main Content for Vaccines Page -->
+<div class="min-h-screen bg-gray-100 py-12">
+  <div class="container mx-auto px-6">
+    <h1 class="text-4xl font-bold text-gray-800 mb-8 text-center">Available Vaccines</h1>
+
+    <!-- Vaccine List -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% vaccines.forEach(vaccine => { %>
+        <div class="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300">
+          <h2 class="text-2xl font-bold text-gray-800 mb-2"><%= vaccine.name %></h2>
+          <p class="text-sm text-gray-600 mb-2"><%= vaccine.description %></p>
+          <p class="text-sm text-gray-600 mb-2">Available Slots: <%= vaccine.availableSlots %></p>
+          <p class="text-sm text-gray-600 mb-2">Hospital: <%= vaccine.hospital %></p>
+          <a
+            href="/users/book-vaccine/<%= vaccine._id %>"
+            class="mt-4 inline-block bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition duration-200"
+          >
+            Book Now
+          </a>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<%- include('./partials/footer') %>

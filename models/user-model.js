@@ -9,6 +9,7 @@ const userSchema = new mongoose.Schema({
   age: Number,
   sex: String,
   address: String,
+  avatar: Buffer,
   otp: String,
   otpExpiry: { type: Date },
   isVerified: { type: Boolean, default: false },

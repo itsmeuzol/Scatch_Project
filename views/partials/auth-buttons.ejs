@@ -15,9 +15,17 @@
 <div class="flex items-center space-x-2 relative">
   <!-- Avatar Icon -->
   <div
-    class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center"
+    class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center overflow-hidden"
   >
+    <% if (avatar) { %>
+    <img
+      src="data:image/jpeg;base64,<%= avatar.toString('base64') %>"
+      alt="User Avatar"
+      class="w-full h-full object-cover"
+    />
+    <% } else { %>
     <span class="text-white font-semibold"><%= fullname[0] %></span>
+    <% } %>
   </div>
 
   <!-- Username and Dropdown Icon -->

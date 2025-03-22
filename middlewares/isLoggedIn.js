@@ -15,6 +15,7 @@ module.exports = async (req, res, next) => {
         req.user = user; // Attach user to the request object
         res.locals.loggedin = true;
         res.locals.fullname = user.fullname;
+        res.locals.avatar = user.avatar;
         res.locals.role = user.role; // Attach user's role to res.locals
       } else {
         res.clearCookie("token");

@@ -3,6 +3,7 @@ const app = express();
 const path = require("path");
 const session = require("express-session");
 const flash = require("connect-flash");
+const middleware = require("./middlewares/isLoggedIn");
 
 const db = require("./config/mongoose-connection");
 
