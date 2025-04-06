@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userModel = require("../models/user-model");
 const appointmentModel = require("../models/appointment-model");
+const blogModel = require("../models/blog-model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookie = require("cookie-parser");
@@ -401,7 +402,8 @@ router.get("/view-prescription", isLoggedIn, async (req, res) => {
     // Fetch the prescription details and ensure it belongs to the logged-in user
     const prescription = await prescriptionModel
       .find({ user: userId })
-      .populate("doctor appointment", "fullname phone service");
+      .populate("appointment", "service")
+      .populate("doctor", "fullname phone");
 
     if (!prescription || prescription.length === 0) {
       return res.status(404).send("No prescriptions found for this user.");
@@ -412,6 +414,38 @@ router.get("/view-prescription", isLoggedIn, async (req, res) => {
   } catch (error) {
     console.error("Error fetching prescription details:", error);
     res.status(500).send("Error loading page.");
+  }
+});
+
+// GET route for add blog form
+router.get("/blog/add", (req, res) => {
+  res.render("add-blog", {
+    title: "Add New Blog Post",
+  });
+});
+
+// POST route to handle blog form submission
+router.post("/blog/add", upload.single("image"), async (req, res) => {
+  try {
+    const { title, content } = req.body;
+    const userId = req.user._id;
+
+    // Handle the uploaded image using Multer
+    const image = req.file ? req.file.buffer : null;
+
+    const newBlog = new blogModel({
+      title,
+      image,
+      content,
+      author: userId,
+    });
+
+    await newBlog.save();
+
+    res.redirect("/blog"); // Redirect to blog list page
+  } catch (error) {
+    console.error("Error adding blog:", error);
+    res.status(500).send("Server Error");
   }
 });
 

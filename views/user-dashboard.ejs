@@ -65,23 +65,36 @@
                 >
                   Service
                 </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Status
+                </th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
               <% appointments.forEach(appointment => { %>
-              <tr>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <%= appointment.date.toDateString() %>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <%= appointment.time %>
-                </td>
-                <td class="px-6 py-4 whitespace-nowrap">
-                  <%= appointment.service %>
-                </td>
-              </tr>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <%= appointment.date.toDateString() %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <%= appointment.time %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <%= appointment.service %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% if (appointment.status === 'Accepted') { %>
+                      <span class="text-green-600 font-semibold">Accepted</span>
+                    <% } else { %>
+                      <span class="text-yellow-500 font-semibold">Pending</span>
+                    <% } %>
+                  </td>
+                </tr>
               <% }) %>
             </tbody>
+            
           </table>
         </div>
         <% } else { %>

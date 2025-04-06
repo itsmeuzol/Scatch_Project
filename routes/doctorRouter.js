@@ -71,12 +71,12 @@ router.post("/accept-appointment/:id", async (req, res) => {
       return res.status(404).send("Appointment not found.");
     }
 
-    // Here, you can update the appointment status or perform any other logic
     appointment.status = "Accepted"; // Example of marking appointment as accepted
     await appointment.save();
+    req.flash("success", "Appointment accepted successfully.");
 
     // Redirect back to the appointments page
-    res.redirect("/doctors/doctor-appointments");
+    res.redirect("/doctor/doctor-appointments");
   } catch (error) {
     console.error(error);
     res.status(500).send("Error accepting appointment.");

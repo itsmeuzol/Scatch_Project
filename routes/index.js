@@ -4,6 +4,7 @@ const isLoggedIn = require("../middlewares/isLoggedIn");
 const productModel = require("../models/product-model");
 const userModel = require("../models/user-model");
 const appointmentModel = require("../models/appointment-model");
+const blogModel = require("../models/blog-model");
 const contactModel = require("../models/contact-model");
 const bcrypt = require("bcrypt");
 const {
@@ -68,8 +69,22 @@ router.get("/help", (req, res) => {
   res.render("help");
 });
 //blog
-router.get("/blog", (req, res) => {
-  res.render("blog");
+router.get("/blog", async (req, res) => {
+  try {
+    const blogs = await blogModel
+      .find()
+      .populate("author")
+      .sort({ createdAt: -1 });
+
+    res.render("blog", {
+      title: "Our Blog",
+      blogs, // passing blogs to the EJS view
+      user: req.user,
+    });
+  } catch (err) {
+    console.error("Error fetching blogs:", err);
+    res.status(500).send("Server Error");
+  }
 });
 //route to get forgot password page
 router.get("/forgot-password", (req, res) => {

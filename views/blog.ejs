@@ -1,84 +1,124 @@
 <%- include('./partials/header') %>
 
 <div class="min-h-screen bg-gray-100 py-12">
-    <div class="container mx-auto px-6">
-        <!-- Page Heading -->
-        <h1 class="text-4xl font-bold text-center mb-8">Our Blog</h1>
-        <p class="text-lg text-gray-600 text-center mb-12">Stay updated with the latest health tips, news, and insights from our experts.</p>
-
-        <!-- Blog Posts Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Blog Post 1 -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <img src="https://via.placeholder.com/400x200" alt="Blog Post 1" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold mb-4">10 Tips for a Healthy Lifestyle</h2>
-                    <p class="text-gray-600 mb-4">Discover simple yet effective tips to maintain a healthy lifestyle and improve your overall well-being.</p>
-                    <a href="/blog/10-tips-for-a-healthy-lifestyle" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
-                </div>
-            </div>
-
-            <!-- Blog Post 2 -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <img src="https://via.placeholder.com/400x200" alt="Blog Post 2" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold mb-4">The Importance of Regular Checkups</h2>
-                    <p class="text-gray-600 mb-4">Learn why regular health checkups are crucial for early detection and prevention of diseases.</p>
-                    <a href="/blog/importance-of-regular-checkups" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
-                </div>
-            </div>
-
-            <!-- Blog Post 3 -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <img src="https://via.placeholder.com/400x200" alt="Blog Post 3" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold mb-4">Managing Stress in a Busy World</h2>
-                    <p class="text-gray-600 mb-4">Explore practical strategies to manage stress and maintain mental health in today's fast-paced world.</p>
-                    <a href="/blog/managing-stress" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
-                </div>
-            </div>
-
-            <!-- Blog Post 4 -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <img src="https://via.placeholder.com/400x200" alt="Blog Post 4" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold mb-4">The Benefits of a Balanced Diet</h2>
-                    <p class="text-gray-600 mb-4">Understand how a balanced diet can improve your health and prevent chronic diseases.</p>
-                    <a href="/blog/benefits-of-a-balanced-diet" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
-                </div>
-            </div>
-
-            <!-- Blog Post 5 -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <img src="https://via.placeholder.com/400x200" alt="Blog Post 5" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold mb-4">Exercise for a Healthy Heart</h2>
-                    <p class="text-gray-600 mb-4">Find out how regular exercise can keep your heart healthy and reduce the risk of cardiovascular diseases.</p>
-                    <a href="/blog/exercise-for-a-healthy-heart" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
-                </div>
-            </div>
-
-            <!-- Blog Post 6 -->
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                <img src="https://via.placeholder.com/400x200" alt="Blog Post 6" class="w-full h-48 object-cover">
-                <div class="p-6">
-                    <h2 class="text-2xl font-bold mb-4">Sleep and Its Impact on Health</h2>
-                    <p class="text-gray-600 mb-4">Learn about the importance of sleep and how it affects your physical and mental health.</p>
-                    <a href="/blog/sleep-and-health" class="text-blue-600 font-semibold hover:text-blue-800">Read More →</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pagination -->
-        <div class="flex justify-center mt-12">
-            <nav class="flex gap-2">
-                <a href="#" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">1</a>
-                <a href="#" class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50">2</a>
-                <a href="#" class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50">3</a>
-                <a href="#" class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50">Next →</a>
-            </nav>
-        </div>
+  <div class="container mx-auto px-6">
+    <!-- Page Heading (Centered) -->
+    <div class="text-center mb-4">
+      <h1 class="text-4xl font-bold">Our Blog</h1>
+      <p class="text-lg text-gray-600 mt-2">
+        Stay updated with the latest health tips, news, and insights from our
+        experts.
+      </p>
     </div>
+
+    <% if (user && user.role !== 'admin') { %>
+    <!-- Centered Add Blog Button -->
+    <div class="flex justify-center mb-8">
+      <a
+        href="/users/blog/add"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition-colors duration-300"
+      >
+        + Add Blog Post
+      </a>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8 rounded-r-lg">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg
+            class="h-5 w-5 text-blue-500"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-lg font-medium text-blue-800">
+            Do you have any ideas?
+          </h3>
+          <div class="mt-2 text-blue-700">
+            <p>Share your health tips or blog ideas with our community!</p>
+          </div>
+          <div class="mt-4">
+            <a
+              href="/users/blog/add"
+              class="inline-flex items-center text-blue-600 hover:text-blue-500 font-medium"
+            >
+              Submit your blog post →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <% } %>
+
+    <!-- Blog Posts Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% blogs.forEach(blog => { %>
+      <div
+        class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+      >
+        <img
+          class="w-full h-48 object-cover"
+          src="data:image/jpeg;base64,<%= blog.image.toString('base64') %>"
+          alt="<%= blog.title %>"
+        />
+
+        <div class="p-6">
+          <h2 class="text-2xl font-bold mb-4"><%= blog.title %></h2>
+          <p class="text-gray-600 mb-4">
+            <%= blog.content.length > 100 ? blog.content.substring(0, 100) +
+            '...' : blog.content %>
+          </p>
+          <a
+            href="/blog/<%= blog._id %>"
+            class="text-blue-600 font-semibold hover:text-blue-800"
+          >
+            Read More →
+          </a>
+          <div class="mt-4 text-sm text-gray-500">
+            <p>Author: <%= blog.author.fullname || 'Anonymous' %></p>
+            <p>Posted at: <%= blog.createdAt.toDateString() %></p>
+          </div>
+        </div>
+        <!-- Author and Posted Date -->
+        
+      </div>
+      <% }) %>
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex justify-center mt-12">
+      <nav class="flex gap-2">
+        <a
+          href="#"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >1</a
+        >
+        <a
+          href="#"
+          class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50"
+          >2</a
+        >
+        <a
+          href="#"
+          class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50"
+          >3</a
+        >
+        <a
+          href="#"
+          class="px-4 py-2 bg-white text-blue-600 rounded-lg hover:bg-blue-50"
+          >Next →</a
+        >
+      </nav>
+    </div>
+  </div>
 </div>
 
 <%- include('./partials/footer') %>
