@@ -95,8 +95,7 @@ module.exports.loginUser = async (req, res) => {
       return res.redirect("/doctor/doctor-dashboard");
       // return res.redirect("/admin-dashboard");
     } else if (user.role === "staff") {
-      return res.send("This is staff page boss.");
-      // return res.redirect("/staff-dashboard");
+      return res.redirect("/owners/admin");
     } else {
       return res.send(`<script>window.location.href = "/";</script>`); // Reload page after login
     }

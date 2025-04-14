@@ -457,7 +457,7 @@ router.get("/vaccines", async (req, res) => {
     const vaccines = await vaccineModel.find({ availableSlots: { $gt: 0 } });
 
     // Render the vaccines page
-    res.render("vaccines", { vaccines });
+    res.render("vaccines", { user: req.user, vaccines });
   } catch (error) {
     console.error("Error fetching vaccines:", error);
     res.status(500).send("Error loading vaccines.");
@@ -465,7 +465,7 @@ router.get("/vaccines", async (req, res) => {
 });
 
 // Render Book Vaccine Page
-router.get("/book-vaccine/:vaccineId", async (req, res) => {
+router.get("/book-vaccine/:vaccineId", isLoggedIn, async (req, res) => {
   try {
     const vaccineId = req.params.vaccineId;
 
